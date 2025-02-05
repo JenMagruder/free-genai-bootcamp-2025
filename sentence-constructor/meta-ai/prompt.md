@@ -88,3 +88,5 @@ What's your attempt at translating the sentence into Japanese?
     - ask clues about verb conjugation
     </assistant:output>
 </example>
+
+Student Input: Did anyone see the groundhog? It has been seen eating my garden.
