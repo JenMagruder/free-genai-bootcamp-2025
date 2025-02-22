@@ -1,0 +1,25 @@
+{
+  "groups": [
+    {
+      "name": "Basic Greetings",
+      "source_file": "basic_greetings.json"
+    }
+  ],
+  "study_activities": [
+    {
+      "name": "Vocabulary Quiz",
+      "thumbnail_url": "https://example.com/vocab-quiz.jpg",
+      "description": "Practice your vocabulary with flashcards"
+    },
+    {
+      "name": "Writing Practice",
+      "thumbnail_url": "https://example.com/writing.jpg",
+      "description": "Practice writing Japanese characters"
+    },
+    {
+      "name": "Listening Exercise",
+      "thumbnail_url": "https://example.com/listening.jpg",
+      "description": "Improve your listening comprehension"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+[
+  {
+    "japanese": "こんにちは",
+    "romaji": "konnichiwa",
+    "english": "hello"
+  },
+  {
+    "japanese": "さようなら",
+    "romaji": "sayounara",
+    "english": "goodbye"
+  },
+  {
+    "japanese": "おはよう",
+    "romaji": "ohayou",
+    "english": "good morning"
+  }
+]
