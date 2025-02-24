@@ -1,3 +1,5 @@
+####NOT COMPLETE
+
 # Streamlit Toki Pona app with AWS deployment
 
 Learn Toki Pona with the help of a Streamlit app deployed on AWS.
