@@ -26,9 +26,9 @@ set OPENAI_API_KEY=your-api-key-here
 # For the main Streamlit application:
 streamlit run app.py -- --group_id=1
 # For word practice:
-# python gradio_word.py
+python gradio_word.py
 # For sentence practice:
-# python gradio_app.py
+python gradio_app.py
 
 # Step 8: To stop the application
 # Press Ctrl+C in the terminal/command prompt where the app is running
