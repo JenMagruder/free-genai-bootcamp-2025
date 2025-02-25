@@ -1,32 +1,34 @@
-### Deploy
-
-## Create virtual environment
+# Step 1: Create virtual environment
 python -m venv venv
 
-## Activate it (Windows)
+# Step 2: Activate virtual environment (choose appropriate command for your shell)
+# For Windows Command Prompt:
 venv\Scripts\activate
+# For Windows PowerShell:
+# .\venv\Scripts\activate
 
-## Install the dependencies:
-$ cd writing-practice
-$ pip install -r requirements.txt
+# Step 3: Navigate to project directory
+cd writing-practice
 
-## Set your OpenAI API Key as an environment variable:
-# https://platform.openai.com/signup
-# Windows Command Prompt
-set OPENAI_API_KEY=your-api-key-here
+# Step 4: Install dependencies
+pip install -r requirements.txt
 
-## Windows PowerShell
-$ env:OPENAI_API_KEY = "your-api-key-here"
-
-##Install Streamlit:
+# Step 5: Install Streamlit (if not included in requirements.txt)
 pip install streamlit
+
+# Step 6: Set OpenAI API Key
+# For Windows Command Prompt:
+set OPENAI_API_KEY=your-api-key-here
+# For Windows PowerShell:
+# $env:OPENAI_API_KEY = "your-api-key-here"
+
+# Step 7: Run one of the applications
+# For the main Streamlit application:
 streamlit run app.py -- --group_id=1
-### For word practice:
-python gradio_word.py
-### For sentence practice:
-python gradio_app.py
+# For word practice:
+# python gradio_word.py
+# For sentence practice:
+# python gradio_app.py
 
-
-# bTo stop the Streamlit app, you can:
-
-Press Ctrl+C in the terminal/command prompt where the app is running
+# Step 8: To stop the application
+# Press Ctrl+C in the terminal/command prompt where the app is running
