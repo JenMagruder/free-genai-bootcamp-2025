@@ -85,3 +85,9 @@
 2025-02-24 20:29:19,061 - MY_APP - Generate button state: False
 2025-02-24 20:29:22,355 - MY_APP - Initializing Japanese Learning App...
 2025-02-24 20:29:22,355 - MY_APP - No group_id provided, using default vocabulary
+2025-02-25 04:49:34,874 - MY_APP - Initializing Japanese Learning App...
+2025-02-25 04:49:34,876 - MY_APP - No group_id provided, using default vocabulary
+2025-02-25 04:49:34,876 - MY_APP - Entering render_setup_state
+2025-02-25 04:49:34,876 - MY_APP - Generate button state: False
+2025-02-25 04:49:35,978 - MY_APP - Initializing Japanese Learning App...
+2025-02-25 04:49:35,978 - MY_APP - No group_id provided, using default vocabulary
