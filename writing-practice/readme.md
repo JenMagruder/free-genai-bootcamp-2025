@@ -18,8 +18,9 @@ set OPENAI_API_KEY=your-api-key-here
 ## Windows PowerShell
 $ env:OPENAI_API_KEY = "your-api-key-here"
 
-### Run the Streamlit app:
-streamlit run app.py
+##Install Streamlit:
+pip install streamlit
+streamlit run app.py -- --group_id=1
 ### For word practice:
 python gradio_word.py
 ### For sentence practice:
