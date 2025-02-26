@@ -77,10 +77,13 @@ class JapaneseLearningApp:
                 return
 
             # Make API request with the actual group_id
-            url = f'http://localhost:5000/api/groups/{group_id}/words/raw'
-            logger.debug(url)
-            response = requests.get(url)
-            logger.debug(f"Response status: {response.status_code}")
+            response = requests.get(f'http://localhost:5000/api/groups/{groupid}/words/raw')
+            print(response.json)()
+            self.vocabulary = response.json()
+        except Exception as e:
+            st.error(f"Failed to load vocabulary: {str(e)}")
+            self.vocabulary = []
+            
 
             # Check if response is successful and contains data
             if response.status_code == 200:

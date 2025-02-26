@@ -1,16 +1,17 @@
-## Install
+# Step 1: Install dependencies
 
-```sh
+cd backend-flask
 pip install -r requirements.txt
 ```
 
-## Setup DB
+# Step 2: Initialize the database
+
 
 ```
 invoke init-db
 ```
 
-## Run
+# Step 3: Run the application
 
 ```sh
 python app.py
