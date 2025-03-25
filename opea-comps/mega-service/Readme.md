@@ -35,6 +35,28 @@ http://localhost:16686/
 python app.py
 ```
 
+## Database Service
+
+The service includes a PostgreSQL database for storing conversations and related data. To use it:
+
+1. Copy `.env.example` to `.env` and set your database credentials
+2. Start the services with docker compose:
+```sh
+docker compose up
+```
+
+The database will be accessible at:
+- Host: localhost
+- Port: 5432
+- Database: defined in your .env file
+
+### Connecting to the Database
+
+Using psql (after installing PostgreSQL client):
+```sh
+psql -h localhost -U your_username -d your_database_name
+```
+
 ## Testing the App
 
 Install Jq so we can pretty JSON on output.
