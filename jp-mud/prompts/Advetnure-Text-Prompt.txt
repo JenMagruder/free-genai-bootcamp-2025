@@ -1,0 +1,141 @@
+## Game Scenario
+A text adventure game.
+
+## Game's Goal
+This is an educational game for learning Japanese.
+
+## Endgame Condition
+The player wins the game when they have learned all vocabulary words.
+
+## Game Interface
+
+There are no graphics, just text.
+There is a box that shows the current adventure text.
+There is a box for the player to input actions along with interactions with the environment or inventory .
+
+## Game World
+
+### Rooms
+The game should be limited to 6 rooms you can move between.
+Each room should contain 3-4 vocabulary words from objects.
+No vocabulary should repeat in different rooms.
+There must be exactly 20 object-based vocabulary words total across all rooms.
+Words should be thematically appropriate for their room.
+
+### NPCs
+The game should include 4-6 NPCs placed in appropriate rooms.
+Each NPC should:
+- Have a role that fits the setting (e.g., barista in a cafe)
+- Have a Japanese name and title
+- Know 2-3 unique vocabulary words that can only be learned through conversation
+- Respond naturally to the 話します (hanashimasu) command
+There must be exactly 10 NPC conversation words total.
+
+### Vocabulary Types
+1. Object Vocabulary (20 words)
+   - Learned by interacting with objects in rooms
+   - Uses verbs like 見ます, 取ります, 使います
+
+2. Conversation Vocabulary (10 words)
+   - Only learned by talking with NPCs
+   - Must use 話します to discover these words
+   - Words should relate to the NPC's role
+   - More advanced or specialized terms
+
+### Theme
+The game should take place in a real world setting.
+The player should choose at the start of the game at the setting from the following options:
+- Office
+- School
+- Restaurant
+- Hospital
+- Gym
+- Postoffice
+- Hardware Store
+- Church
+- Bakery
+- Cafe
+- Library
+- Arcade
+- GenAI Tech Conference
+- Internet Chatroom
+
+## Game Rules
+
+### Fixed Actions
+These are the only expected actions in a game session.
+- Look (examine surroundings or objects)
+- Move (or go in a direction)
+    - North, Up, Left, Right
+- Take (pick up items)
+- Drop (discard items)
+- Talk/Say (communicate with NPCs)
+- Use (interact with items)
+- Give (transfer items to others)
+- Open (doors, chests, etc.)
+- Close (doors, containers)
+- Eat (consume food items)
+- Inventory (check carried items)
+- Drink (consume liquids)
+- Help (view commands/instructions)
+
+### Desktop Adventure Text
+- One paragraph. 
+- be concise.
+- Not every object, NPC, or environment description needs to be called out.
+  - The words should emerge through interaction in the room.
+
+### Vocabulary Learning Rules
+1. Word Introduction
+   - Each room or scene contains exactly one Japanese vocabulary word
+   - Words are introduced through object descriptions, NPC dialogue, or environmental text
+   - New words are always shown in format: 日本語 (romaji / english)
+
+2. Word Mastery System
+   - Players must interact with each word once succesfully using a fixed action.
+   - the fixed action has to make sense in context with the vocabulary word.
+
+3. Action-Vocabulary Integration
+   - 見ます (mimasu/look): Look at objects or surroundings
+     Example: "椅子を見ます" (isu wo mimasu) to look at the chair
+   
+   - 移動します (idou-shimasu/move): Move in a direction
+     Example: "北に移動します" (kita ni idou-shimasu) to move north
+   
+   - 取ります (torimasu/take): Pick up items
+     Example: "本を取ります" (hon wo torimasu) to take a book
+   
+   - 落とします (otoshimasu/drop): Drop items
+     Example: "本を落とします" (hon wo otoshimasu) to drop a book
+   
+   - 話します (hanashimasu/talk): Talk with NPCs
+     Example: "先生と話します" (sensei to hanashimasu) to talk with teacher
+   
+   - 使います (tsukaimasu/use): Use items
+     Example: "鍵を使います" (kagi wo tsukaimasu) to use a key
+   
+   - あげます (agemasu/give): Give items to NPCs
+     Example: "先生に本をあげます" (sensei ni hon wo agemasu) to give book to teacher
+   
+   - 開けます (akemasu/open): Open objects
+     Example: "ドアを開けます" (doa wo akemasu) to open the door
+   
+   - 閉めます (shimemasu/close): Close objects
+     Example: "ドアを閉めます" (doa wo shimemasu) to close the door
+   
+   - 食べます (tabemasu/eat): Eat food items
+     Example: "リンゴを食べます" (ringo wo tabemasu) to eat an apple
+   
+   - 飲みます (nomimasu/drink): Drink items
+     Example: "お茶を飲みます" (ocha wo nomimasu) to drink tea
+   
+   - 見ます (mimasu/check): Check bag contents
+     Example: "かばんの中を見ます" (kaban no naka wo mimasu) to look in the bag
+   
+   - 助けてください (tasukete kudasai/help): Ask for help
+     Example: "助けてください" (tasukete kudasai) to see commands
+
+4. Progress Tracking
+   - Game maintains a list of mastered vocabulary
+   - Each mastered word counts toward the 20-word goal
+   - Player can check progress using "Help" command
