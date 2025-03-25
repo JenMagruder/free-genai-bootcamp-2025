@@ -1,0 +1,95 @@
+## Example World: Cafe Theme
+
+### Room 1: Entrance (入口/iriguchi)
+A welcoming entrance to the cafe with a sign and menu board.
+- Vocabulary:
+  - ドア (doa) - door
+  - メニュー (menyuu) - menu
+  - 看板 (kanban) - sign
+  - 傘 (kasa) - umbrella
+
+### Room 2: Counter Area (カウンター/kauntaa)
+Where customers order and pay for their drinks.
+- Vocabulary:
+  - お金 (okane) - money
+  - レシート (reshiito) - receipt
+  - 財布 (saifu) - wallet
+  - レジ (reji) - cash register
+
+### Room 3: Seating Area (座席/zaseki)
+The main cafe space with tables and chairs.
+- Vocabulary:
+  - 椅子 (isu) - chair
+  - テーブル (teeburu) - table
+  - 窓 (mado) - window
+  - エアコン (eakon) - air conditioner
+
+### Room 4: Coffee Bar (コーヒーバー/koohiibaa)
+Where baristas prepare drinks.
+- Vocabulary:
+  - コーヒー (koohii) - coffee
+  - カップ (kappu) - cup
+  - お水 (omizu) - water
+
+### Room 5: Kitchen (キッチン/kicchin)
+Where food is prepared.
+- Vocabulary:
+  - ケーキ (keeki) - cake
+  - お皿 (osara) - plate
+  - フォーク (fooku) - fork
+  - ナイフ (naifu) - knife
+
+### Room 6: Rest Area (休憩室/kyuukeishitsu)
+A relaxation space with magazines and wifi.
+- Vocabulary:
+  - 雑誌 (zasshi) - magazine
+  - スマホ (sumaho) - smartphone
+  - ソファー (sofaa) - sofa
+  - 時計 (tokei) - clock
+
+### Room Connections:
+- Entrance connects to Counter Area and Seating Area
+- Counter Area connects to Coffee Bar and Kitchen
+- Seating Area connects to Rest Area
+- Coffee Bar connects to Kitchen
+- Kitchen connects to Rest Area
+
+### NPCs and Conversation Vocabulary
+
+1. 田中さん (Tanaka-san) - Cafe Manager
+   Location: Counter Area
+   Vocabulary:
+   - 予約 (yoyaku) - reservation
+   - サービス (saabisu) - service
+
+2. 鈴木さん (Suzuki-san) - Barista
+   Location: Coffee Bar
+   Vocabulary:
+   - 混雑 (konzatsu) - crowded
+   - 特製 (tokusei) - special made
+
+3. 佐藤さん (Satou-san) - Chef
+   Location: Kitchen
+   Vocabulary:
+   - 手作り (tedzukuri) - handmade
+   - 甘い (amai) - sweet
+
+4. 山本さん (Yamamoto-san) - Server
+   Location: Seating Area
+   Vocabulary:
+   - おすすめ (osusume) - recommendation
+   - 美味しい (oishii) - delicious
+
+### Example Interactions:
+1. "ドアを開けます" (Open the door) at the entrance
+2. "お金を使います" (Use money) at the counter
+3. "椅子を見ます" (Look at the chair) in seating area
+4. "コーヒーを飲みます" (Drink coffee) at coffee bar
+5. "ケーキを食べます" (Eat cake) from kitchen
+6. "雑誌を取ります" (Take magazine) in rest area
+
+### NPC Interaction Examples:
+1. "田中さんと話します" (Talk with Tanaka-san) - Learn about reservations
+2. "鈴木さんと話します" (Talk with Suzuki-san) - Learn about special coffee
+3. "佐藤さんと話します" (Talk with Satou-san) - Learn about handmade sweets
+4. "山本さんと話します" (Talk with Yamamoto-san) - Get menu recommendations
