@@ -17,6 +17,7 @@ services:
       https_proxy: ${https_proxy}
       COLLECTOR_ZIPKIN_HOST_PORT: 9411
     restart: unless-stopped
+
   ollama-server:
     image: ollama/ollama
     container_name: ollama-server
@@ -28,6 +29,7 @@ services:
       https_proxy: ${https_proxy}
       LLM_MODEL_ID: ${LLM_MODEL_ID}
       host_ip: ${host_ip}
+
   postgres:
     image: postgres:16-alpine
     container_name: postgres
@@ -45,6 +47,17 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U megaservice_user -d conversations_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 networks:
   default:
@@ -52,4 +65,3 @@ networks:
 
 volumes:
   postgres_data:
-    driver: local
