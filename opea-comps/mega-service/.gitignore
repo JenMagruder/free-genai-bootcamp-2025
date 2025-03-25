@@ -1,0 +1,36 @@
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Database
+postgres_data/
+*.db
+*.sqlite3
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs and output
+*.log
+output/*.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Dependencies
+node_modules/
+venv/
+.env/
+
+# OS files
+.DS_Store
+Thumbs.db

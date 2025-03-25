@@ -35,6 +35,18 @@ http://localhost:16686/
 python app.py
 ```
 
+## Extended Features
+
+### Database Integration
+The service includes a PostgreSQL database for storing conversations. See [TUTORIAL.md](TUTORIAL.md) for a detailed guide on:
+- Setting up the database
+- Managing conversations
+- Integrating with the LLM service
+
+### Additional Resources
+- [Detailed Tutorial](TUTORIAL.md) - Step-by-step guide for setting up and extending the service
+- [Ollama API Documentation](https://github.com/ollama/ollama/blob/main/docs/api.md)
+
 ## Database Service
 
 The service includes a PostgreSQL database for storing conversations and related data. To use it:
