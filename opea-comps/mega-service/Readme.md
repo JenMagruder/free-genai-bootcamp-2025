@@ -1,4 +1,97 @@
-## How to run the LLM Service
+# Mega Service: Containerized AI System
+
+A production-ready AI system combining Ollama LLM server, PostgreSQL database, and Jaeger tracing.
+
+## Quick Start
+
+1. Clone the repository
+2. Copy `.env.example` to `.env`
+3. Run:
+```bash
+docker compose up -d
+```
+
+## Features
+
+### 🤖 LLM Service (Ollama)
+- Serves AI models via REST API
+- Supports multiple model types
+- Easy model management
+- [Learn more about LLM setup](TUTORIAL.md#4-testing-ollama-llm-server)
+
+### 📊 Database (PostgreSQL)
+- Stores conversations and messages
+- JSONB support for flexible metadata
+- Optimized indexes for performance
+- [Database setup guide](TUTORIAL.md#2-database-setup)
+
+### 📈 Monitoring (Jaeger)
+- Distributed tracing
+- Performance monitoring
+- Request visualization
+- [Monitoring guide](TUTORIAL.md#5-monitoring-with-jaeger)
+
+## Detailed Documentation
+
+See our [comprehensive tutorial](TUTORIAL.md) for:
+- [System Overview](TUTORIAL.md#system-overview)
+- [Detailed Setup Guide](TUTORIAL.md#detailed-setup-guide)
+- [Advanced Usage](TUTORIAL.md#advanced-usage)
+- [Troubleshooting](TUTORIAL.md#troubleshooting)
+- [Best Practices](TUTORIAL.md#best-practices)
+
+## Environment Variables
+
+Create a `.env` file with:
+```bash
+# LLM Configuration
+LLM_ENDPOINT_PORT=9000
+LLM_MODEL_ID=llama3.2:1b
+
+# Database Configuration
+POSTGRES_DB=conversations_db
+POSTGRES_USER=megaservice_user
+POSTGRES_PASSWORD=your_secure_password
+```
+
+## Common Commands
+
+### Start Services
+```bash
+docker compose up -d
+```
+
+### Check Status
+```bash
+docker compose ps
+```
+
+### View Logs
+```bash
+docker compose logs
+```
+
+### Connect to Database
+```bash
+docker exec -it postgres psql -U postgres
+```
+
+## Useful Links
+- [Ollama API Documentation](https://github.com/ollama/ollama/blob/main/docs/api.md)
+- [PostgreSQL Documentation](https://www.postgresql.org/docs/)
+- [Jaeger UI](http://localhost:16686)
+
+## Contributing
+See [TUTORIAL.md](TUTORIAL.md#best-practices) for development best practices.
+
+## Next Steps
+Check our [tutorial](TUTORIAL.md#next-steps) for:
+- Scaling with Kubernetes
+- Adding more AI models
+- Implementing caching
+- Setting up authentication
+
+## How to Run the LLM Service
 
 We are using Ollama which is being delivered via docker compose.
 
