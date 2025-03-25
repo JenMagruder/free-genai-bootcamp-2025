@@ -1,48 +1,68 @@
-1. Python 3.8 or higher installed
-2. The Flask backend server (lang-portal-flask-react) running on port 5000
-3. All required Python packages installed
+# Writing Practice Setup Guide
+
+## Prerequisites
+
+Before setting up the project, ensure you have the following installed:
+
+1. **Python 3.8 or higher**
+2. **Flask backend server** (`lang-portal-flask-react`) running on port `5000`
+3. **All required Python packages** installed
+
+---
 
 ## Setup Instructions
 
-1. First, start the Flask backend server:
+### Step 1: Start the Flask Backend Server
+
+1. Navigate to the `lang-portal-flask-react` directory:
    ```bash
-   # Navigate to the lang-portal-flask-react directory and start the server
    cd ../lang-portal-flask-react
-   # Follow the backend setup instructions to run the Flask server
-   # The server should be running on http://localhost:5000
+   ```
+2. Follow the backend setup instructions to run the Flask server.
+3. Ensure the server is running at: [http://localhost:5000](http://localhost:5000)
 
-### Deploy writing-practice
-# Step 1: Create virtual environment
+---
+
+### Step 2: Deploy `writing-practice`
+
+#### 1. Create a Virtual Environment
+```bash
 python -m venv venv
+```
 
-# Step 2: Activate virtual environment (choose appropriate command for your shell)
-# For Windows Command Prompt:
-venv\Scripts\activate
-# For Windows PowerShell:
-# .\venv\Scripts\activate
+#### 2. Activate the Virtual Environment
 
-# Step 3: Navigate to project directory
+- **For Windows (Command Prompt):**
+  ```bash
+  venv\Scripts\activate
+  ```
+- **For Windows (PowerShell):**
+  ```powershell
+  .\venv\Scripts\activate
+  ```
+
+#### 3. Navigate to the Project Directory
+```bash
 cd writing-practice
+```
 
-# Step 4: Install dependencies
+#### 4. Install Dependencies
+```bash
 pip install -r requirements.txt
+```
 
-# Step 5: Install Streamlit (if not included in requirements.txt)
+#### 5. Install Streamlit (if not included in `requirements.txt`)
+```bash
 pip install streamlit
+```
 
-# Step 6: Set OpenAI API Key
-# For Windows Command Prompt:
-set OPENAI_API_KEY=your-api-key-here
-# For Windows PowerShell:
-# $env:OPENAI_API_KEY = "your-api-key-here"
+#### 6. Set OpenAI API Key
 
-# Step 7: Run one of the applications
-# For the main Streamlit application:
-streamlit run app.py -- --group_id=1
-# For word practice:
-python gradio_word.py
-# For sentence practice:
-python gradio_app.py
-
-# Step 8: To stop the application
-# Press Ctrl+C in the terminal/command prompt where the app is running
+- **For Windows (Command Prompt):**
+  ```bash
+  set OPENAI_API_KEY=your-api-key-here
+  ```
+- **For Windows (PowerShell):**
+  ```powershell
+  $env:OPENAI_API_KEY = "your-api-key-here"
+  ```
