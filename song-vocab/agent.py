@@ -79,6 +79,7 @@ class SongLyricsAgent:
         self.lyrics_path = self.base_path / "outputs" / "lyrics"
         self.vocabulary_path = self.base_path / "outputs" / "vocabulary"
         self.stream_llm = stream_llm
+        self.model = "mistral"  # Use Mistral model
         self.context_window = calculate_safe_context_window(available_ram_gb)
         logger.info(f"Calculated safe context window size: {self.context_window} tokens for {available_ram_gb}GB RAM")
         
@@ -92,6 +93,9 @@ class SongLyricsAgent:
         try:
             self.client = ollama.Client()
             self.tools = ToolRegistry(self.lyrics_path, self.vocabulary_path)
+            # Load prompt template with UTF-8 encoding
+            with open(self.prompt_path, 'r', encoding='utf-8') as f:
+                self.prompt_template = f.read()
             logger.info("Initialization successful")
         except Exception as e:
             logger.error(f"Failed to initialize: {e}")
@@ -129,62 +133,48 @@ class SongLyricsAgent:
             logger.error(f"Tool Failed: {tool_name} - {e}")
             raise
 
-    def _get_llm_response(self, conversation):
-        """Get response from LLM with optional streaming.
-        
-        Args:
-            conversation (list): List of conversation messages
-            
-        Returns:
-            dict: Response object with 'content' key
-        """
-        if self.stream_llm:
-            # Stream response and collect tokens
-            full_response = ""
-            logger.info("Streaming tokens:")
-            for chunk in self.client.chat(
-                model="llama3.2:3b",
-                messages=conversation,
-                stream=True
-            ):
-                content = chunk.get('message', {}).get('content', '')
-                if content:
-                    logger.info(f"Token: {content}")
-                    full_response += content
-            
-            # Create response object similar to non-streaming format
-            return {'content': full_response}
-        else:
-            # Non-streaming response
-            try:
+    async def _get_llm_response(self, conversation: List[Dict[str, str]]) -> Dict[str, str]:
+        """Get response from LLM with optional streaming."""
+        try:
+            if self.stream_llm:
+                # Stream response and collect tokens
+                full_response = ""
+                logger.info("Streaming tokens:")
                 response = self.client.chat(
-                    model="llama3.2:3b",
+                    model=self.model,
                     messages=conversation,
-                    options={
-                        "num_ctx": self.context_window
-                    }
+                    stream=True
                 )
-                # Log context window usage
-                prompt_tokens = response.get('prompt_eval_count', 0)
-                total_tokens = prompt_tokens + response.get('eval_count', 0)
-                logger.info(f"Context window usage: {prompt_tokens}/{2048} tokens (prompt), {total_tokens} total tokens")
-                
-                logger.info(f"  Message ({response['message']['role']}): {response['message']['content'][:300]}...")
+                for chunk in response:
+                    content = chunk.get('message', {}).get('content', '')
+                    if content:
+                        logger.info(f"Token: {content}")
+                        full_response += content
+                return {'message': {'role': 'assistant', 'content': full_response}}
+            else:
+                # Non-streaming response
+                response = self.client.chat(
+                    model=self.model,
+                    messages=conversation,
+                    stream=False
+                )
                 return response
-            except Exception as e:
-                logger.error(f"LLM response error: {e}")
-                # Return a minimal response to prevent crashes
-                return {'message': {'role': 'assistant', 'content': 'Error: Context too large. Please try with less context.'}}
-    
-    async def process_request(self, message: str) -> str:
+        except Exception as e:
+            logger.error(f"Error getting LLM response: {str(e)}")
+            raise
+
+    async def process_request(self, message: str | List[Dict[str, str]]) -> str:
         """Process a user request using the ReAct framework."""
         logger.info("-"*20)
         
-        # Initialize conversation with system prompt and user message
-        conversation = [
-            {"role": "system", "content": self.prompt_path.read_text()},
-            {"role": "user", "content": message}
-        ]
+        # Handle both string messages and conversation lists
+        if isinstance(message, str):
+            conversation = [
+                {"role": "system", "content": self.prompt_template},
+                {"role": "user", "content": message}
+            ]
+        else:
+            conversation = message  # Already a conversation list
         
         max_turns = 10
         current_turn = 0
@@ -198,9 +188,7 @@ class SongLyricsAgent:
                     for msg in conversation[-2:]:  # Show last 2 messages for context
                         logger.info(f"  Message ({msg['role']}): {msg['content'][:300]}...")
 
-                    response = self._get_llm_response(conversation)
-
-                    #breakpoint()
+                    response = await self._get_llm_response(conversation)
                     
                     if not isinstance(response, dict) or 'message' not in response or 'content' not in response['message']:
                         raise ValueError(f"Unexpected response format from LLM: {response}")
@@ -208,50 +196,43 @@ class SongLyricsAgent:
                     # Extract content from the message
                     content = response.get('message', {}).get('content', '')
                     if not content or not content.strip():
-                        breakpoint()
                         logger.warning("Received empty response from LLM")
                         conversation.append({"role": "system", "content": "Your last response was empty. Please process the previous result and specify the next tool to use, or indicate FINISHED if done."})
                         continue
 
-                    response = {'content': content}
+                    # Add assistant's response to conversation
+                    conversation.append({"role": "assistant", "content": content})
                     
-                    # Parse the action
-                    action = self.parse_llm_action(response['content'])
+                    # Check if the response indicates completion
+                    if "FINISHED" in content:
+                        logger.info("Task completed")
+                        # Extract song_id from the last successful save_results call
+                        return content.split("FINISHED")[0].strip()
                     
-                    if not action:
-                        if 'FINISHED' in response['content']:
-                            logger.info("LLM indicated task is complete")
-                            return response['content']
-                        else:
-                            logger.warning("No tool call found in LLM response")
-                            conversation.append({"role": "system", "content": "Please specify a tool to use or indicate FINISHED if done."})
-                            continue
+                    # Parse and execute tool
+                    tool_name, args = self.parse_llm_action(content)
+                    if tool_name:
+                        try:
+                            result = await self.execute_tool(tool_name, args)
+                            conversation.append({"role": "system", "content": f"Tool {tool_name} result: {result}"})
+                        except Exception as e:
+                            error_msg = f"Error: {str(e)}. Please try a different approach."
+                            logger.error(f"❌ Error in turn {current_turn + 1}: {str(e)}")
+                            logger.error("Stack trace:", exc_info=True)
+                            conversation.append({"role": "system", "content": error_msg})
+                    else:
+                        conversation.append({"role": "system", "content": "Please specify a tool to use or indicate FINISHED if done."})
+                
                 except Exception as e:
-                    logger.error(f"Error getting LLM response: {e}")
-                    logger.debug("Last conversation state:", exc_info=True)
-                    for msg in conversation[-2:]:
-                        logger.debug(f"Message ({msg['role']}): {msg['content']}")
-                    raise
-                
-                # Execute the tool
-                tool_name, tool_args = action
-                logger.info(f"Executing tool: {tool_name}")
-                logger.info(f"Arguments: {tool_args}")
-                result = await self.execute_tool(tool_name, tool_args)
-                logger.info(f"Tool execution complete")
-                
-                # Add the interaction to conversation
-                conversation.extend([
-                    {"role": "assistant", "content": response['content']},
-                    {"role": "system", "content": f"Tool {tool_name} result: {json.dumps(result)}"}
-                ])
+                    error_msg = f"Error: {str(e)}. Please try a different approach."
+                    logger.error(f"❌ Error in turn {current_turn + 1}: {str(e)}")
+                    logger.error("Stack trace:", exc_info=True)
+                    conversation.append({"role": "system", "content": error_msg})
                 
                 current_turn += 1
                 
             except Exception as e:
-                logger.error(f"❌ Error in turn {current_turn + 1}: {e}")
-                logger.error(f"Stack trace:", exc_info=True)
-                conversation.append({"role": "system", "content": f"Error: {str(e)}. Please try a different approach."})
+                logger.error(f"Critical error in turn {current_turn + 1}: {str(e)}")
+                raise
         
-        raise Exception("Reached maximum number of turns without completing the task")
-        raise Exception("Failed to get results within maximum turns")
+        raise TimeoutError("Max turns reached without completion")

@@ -19,14 +19,28 @@ def save_results(song_id: str, lyrics: str, vocabulary: List[Dict[str, Any]], ly
     Returns:
         str: The song_id that was used to save the files
     """
-    # Save lyrics
-    lyrics_file = lyrics_path / f"{song_id}.txt"
-    lyrics_file.write_text(lyrics)
-    logger.info(f"Saved lyrics to {lyrics_file}")
-    
-    # Save vocabulary
-    vocab_file = vocabulary_path / f"{song_id}.json"
-    vocab_file.write_text(json.dumps(vocabulary, ensure_ascii=False, indent=2))
-    logger.info(f"Saved vocabulary to {vocab_file}")
-    
-    return song_id
+    try:
+        # Ensure the lyrics are properly encoded
+        if isinstance(lyrics, bytes):
+            lyrics = lyrics.decode('utf-8', errors='replace')
+        elif isinstance(lyrics, str):
+            lyrics = lyrics.encode('utf-8', errors='replace').decode('utf-8')
+        
+        # Save lyrics with UTF-8 encoding
+        lyrics_file = lyrics_path / f"{song_id}.txt"
+        lyrics_file.write_text(lyrics, encoding='utf-8')
+        logger.info(f"Saved lyrics to {lyrics_file}")
+        
+        # Save vocabulary with UTF-8 encoding
+        vocab_file = vocabulary_path / f"{song_id}.json"
+        vocab_file.write_text(
+            json.dumps(vocabulary, ensure_ascii=False, indent=2),
+            encoding='utf-8'
+        )
+        logger.info(f"Saved vocabulary to {vocab_file}")
+        
+        return song_id
+        
+    except Exception as e:
+        logger.error(f"Error saving results: {str(e)}")
+        raise

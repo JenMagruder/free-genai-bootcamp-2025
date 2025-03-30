@@ -31,95 +31,55 @@ async def get_page_content(url: str) -> Dict[str, Optional[str]]:
                         "metadata": error_msg
                     }
                 
-                logger.debug("Reading response content...")
-                html = await response.text()
-                logger.info(f"Successfully fetched page content ({len(html)} bytes)")
-                return extract_lyrics_from_html(html, url)
+                # Ensure proper encoding of response content
+                content = await response.text(encoding='utf-8', errors='replace')
+                soup = BeautifulSoup(content, 'html.parser', from_encoding='utf-8')
+                
+                # Try to find lyrics in common patterns
+                japanese_lyrics = None
+                romaji_lyrics = None
+                for tag in ['div', 'p']:
+                    elements = soup.find_all(tag, class_=lambda x: x and ('lyrics' in x.lower() or 'text' in x.lower()))
+                    for element in elements:
+                        text = clean_text(element.get_text())
+                        if text and len(text) > 100:  # Basic validation that we found substantial text
+                            if is_primarily_japanese(text):
+                                japanese_lyrics = text
+                            elif is_primarily_romaji(text):
+                                romaji_lyrics = text
+                            break
+                    if japanese_lyrics and romaji_lyrics:
+                        break
+                
+                if not japanese_lyrics and not romaji_lyrics:
+                    # Fallback: look for any large text block that might be lyrics
+                    for tag in ['div', 'p']:
+                        elements = soup.find_all(tag)
+                        for element in elements:
+                            text = clean_text(element.get_text())
+                            if text and len(text) > 100:
+                                if is_primarily_japanese(text):
+                                    japanese_lyrics = text
+                                elif is_primarily_romaji(text):
+                                    romaji_lyrics = text
+                                break
+                        if japanese_lyrics and romaji_lyrics:
+                            break
+                
+                return {
+                    "japanese_lyrics": japanese_lyrics,
+                    "romaji_lyrics": romaji_lyrics,
+                    "metadata": f"Extracted from {url}"
+                }
+                
     except Exception as e:
-        error_msg = f"Error fetching page: {str(e)}"
+        error_msg = f"Error fetching URL: {str(e)}"
         logger.error(error_msg, exc_info=True)
         return {
             "japanese_lyrics": None,
             "romaji_lyrics": None,
             "metadata": error_msg
         }
-
-def extract_lyrics_from_html(html: str, url: str) -> Dict[str, Optional[str]]:
-    """
-    Extract lyrics from HTML content based on common patterns in lyrics websites.
-    """
-    logger.info("Starting lyrics extraction from HTML")
-    soup = BeautifulSoup(html, 'html.parser')
-    
-    # Remove script and style elements
-    logger.debug("Cleaning HTML content...")
-    for element in soup(['script', 'style', 'header', 'footer', 'nav']):
-        element.decompose()
-    
-    # Common patterns for lyrics containers
-    lyrics_patterns = [
-        # Class patterns
-        {"class_": re.compile(r"lyrics?|kashi|romaji|original", re.I)},
-        {"class_": re.compile(r"song-content|song-text|track-text", re.I)},
-        # ID patterns
-        {"id": re.compile(r"lyrics?|kashi|romaji|original", re.I)},
-        # Common Japanese lyrics sites patterns
-        {"class_": "lyrics_box"},  # Uta-Net
-        {"class_": "hiragana"},    # J-Lyrics
-        {"class_": "romaji"}       # J-Lyrics
-    ]
-    
-    japanese_lyrics = None
-    romaji_lyrics = None
-    metadata = ""
-    
-    # Try to find lyrics containers
-    logger.debug("Searching for lyrics containers...")
-    for pattern in lyrics_patterns:
-        logger.debug(f"Trying pattern: {pattern}")
-        elements = soup.find_all(**pattern)
-        logger.debug(f"Found {len(elements)} matching elements")
-        
-        for element in elements:
-            text = clean_text(element.get_text())
-            logger.debug(f"Extracted text length: {len(text)} chars")
-            
-            # Detect if text is primarily Japanese or romaji
-            if is_primarily_japanese(text) and not japanese_lyrics:
-                logger.info("Found Japanese lyrics")
-                japanese_lyrics = text
-            elif is_primarily_romaji(text) and not romaji_lyrics:
-                logger.info("Found romaji lyrics")
-                romaji_lyrics = text
-    
-    # If no structured containers found, try to find the largest text block
-    if not japanese_lyrics and not romaji_lyrics:
-        logger.info("No lyrics found in structured containers, trying fallback method")
-        text_blocks = [clean_text(p.get_text()) for p in soup.find_all('p')]
-        if text_blocks:
-            largest_block = max(text_blocks, key=len)
-            logger.debug(f"Found largest text block: {len(largest_block)} chars")
-            
-            if is_primarily_japanese(largest_block):
-                logger.info("Largest block contains Japanese text")
-                japanese_lyrics = largest_block
-            elif is_primarily_romaji(largest_block):
-                logger.info("Largest block contains romaji text")
-                romaji_lyrics = largest_block
-    
-    result = {
-        "japanese_lyrics": japanese_lyrics,
-        "romaji_lyrics": romaji_lyrics,
-        "metadata": metadata or "Lyrics extracted successfully"
-    }
-    
-    # Log the results
-    if japanese_lyrics:
-        logger.info(f"Found Japanese lyrics ({len(japanese_lyrics)} chars)")
-    if romaji_lyrics:
-        logger.info(f"Found romaji lyrics ({len(romaji_lyrics)} chars)")
-    
-    return result
 
 def clean_text(text: str) -> str:
     """

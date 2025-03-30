@@ -1,4 +1,6 @@
-# Tech Specs
+{
+    "message_request": "your message here"
+}# Tech Specs
 
 ## Business Goal
 We want to create a program that will find lyrics off the internet for a target song in a specific langauge and produce vocabulary to be imported into our database.
