@@ -1,4 +1,29 @@
 import streamlit as st
+import random
+
+# Constants for Toki Pona
+TOKI_PONA_WORDS = {
+    "mi": "I, me, we",
+    "sina": "you",
+    "ona": "he, she, it, they",
+    "ni": "this, that",
+    "pona": "good, simple",
+    "ike": "bad, complex",
+    "suli": "big, important",
+    "lili": "small, little",
+    "kama": "come, become",
+    "tawa": "to, for, moving",
+    "moku": "food, eat",
+    "tomo": "house, building",
+    "jan": "person, human",
+    "wile": "want, need",
+    "sona": "knowledge, know",
+    "lukin": "see, look",
+    "kepeken": "use, with",
+    "lon": "at, exist",
+    "tan": "from, because",
+    "sama": "same, similar"
+}
 
 st.set_page_config(
     page_title="Toki Pona Learning App",
@@ -10,33 +35,40 @@ st.title("📝 o kama pona tawa lipu sona!")  # Welcome to the Learning App
 st.subheader("sina ken kama sona e toki pona lon ni!")  # Use this page to learn Toki Pona
 st.divider()
 
-if 'study_mode' not in st.session_state:
-    st.session_state.study_mode = None
+# Initialize session state
+if 'current_word' not in st.session_state:
+    st.session_state.current_word = random.choice(list(TOKI_PONA_WORDS.keys()))
 
-st.session_state.study_mode = st.radio(
+# Learning mode selection
+study_mode = st.radio(
     "sina wile kama sona e seme?",  # What do you want to learn?
-    ["nimi lili", "sitelen pona"],  # Basic words, Sitelen Pona (writing system)
+    ["nimi lili (Basic Words)", "sitelen pona (Writing System)"],
     horizontal=True
 )
 
-# Display the Toki Pona Chart
-image_path = f"img/{st.session_state.study_mode}.jpg"
-try:
-    st.image(image_path,
-             caption=f"{st.session_state.study_mode} lipu. "  # Chart
-                     f"tan: https://tokipona.org/")
-except FileNotFoundError:
-    st.error(
-        f"mi ken ala lon e sitelen {st.session_state.study_mode}. "  # Could not load the image
-        f"o lukin e nasin ni: {image_path}")  # Please check this path
+if study_mode == "nimi lili (Basic Words)":
+    # Word learning section
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.subheader("Current Word:")
+        st.header(st.session_state.current_word)
+        st.write(f"Meaning: {TOKI_PONA_WORDS[st.session_state.current_word]}")
+        
+    with col2:
+        if st.button("Next Word"):
+            st.session_state.current_word = random.choice(list(TOKI_PONA_WORDS.keys()))
+            st.rerun()
+
+else:
+    st.info("The writing system practice will be available in the next update! For now, try learning the basic words.")
 
 # Footer
 st.divider()
 st.markdown(
     """
-    🎯 **o kepeken mute!**  # Practice Makes Perfect!
-    👉 o tawa **lipu toki mama** en **lipu toki pona** tawa ni: sina ken lukin e sona sina.  # Visit the translation pages to test your knowledge
-    🔁 ante e nasin sina lon **nimi lili** en **sitelen pona** tawa ni: sina ken kama sona pona.  # Switch between modes to improve
-    🌟 o awen kama sona! o lukin e pona sina!  # Keep practicing and track your progress!
-    """,
+    🎯 **o kepeken mute!** (Practice Makes Perfect!)
+    👉 Learn one word at a time and try to use it in sentences.
+    🌟 o awen kama sona! (Keep learning!)
+    """
 )
