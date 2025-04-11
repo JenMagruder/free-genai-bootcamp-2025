@@ -1,0 +1,9 @@
+{
+  "name": "toki-pona-svg-converter",
+  "version": "1.0.0",
+  "description": "Convert Toki Pona SVGs to PNGs",
+  "main": "convert_svg.js",
+  "dependencies": {
+    "sharp": "^0.33.2"
+  }
+}
