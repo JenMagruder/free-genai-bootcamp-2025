@@ -1,0 +1,8 @@
+data/
+├── toki_pona/
+│   ├── vocabulary.json
+│   ├── examples.json
+│   └── writing_system/
+│       └── symbols/
+└── user_progress/
+    └── progress.json
