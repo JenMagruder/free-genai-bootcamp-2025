@@ -10,94 +10,64 @@ import random
 import torchvision.models as models
 from torchvision.models import ResNet34_Weights
 
-class FeaturePyramidNetwork(nn.Module):
-    def __init__(self, in_channels):
-        super().__init__()
-        self.conv1 = nn.Conv2d(in_channels, 256, 1)
-        self.bn1 = nn.BatchNorm2d(256)
-        
-    def forward(self, x):
-        x = self.conv1(x)
-        x = self.bn1(x)
-        x = F.relu(x)
-        return x
-
-class ResidualBlock(nn.Module):
-    def __init__(self, in_dim, out_dim):
-        super().__init__()
-        self.fc1 = nn.Linear(in_dim, out_dim)
-        self.bn1 = nn.BatchNorm1d(out_dim)
-        self.fc2 = nn.Linear(out_dim, out_dim)
-        self.bn2 = nn.BatchNorm1d(out_dim)
-        
-        if in_dim != out_dim:
-            self.shortcut = nn.Sequential(
-                nn.Linear(in_dim, out_dim),
-                nn.BatchNorm1d(out_dim)
-            )
-        else:
-            self.shortcut = nn.Identity()
-            
-    def forward(self, x):
-        residual = self.shortcut(x)
-        out = F.relu(self.bn1(self.fc1(x)))
-        out = self.bn2(self.fc2(out))
-        out += residual
-        return F.relu(out)
-
 class SiameseNet(nn.Module):
-    def __init__(self, embedding_dim=512):  
+    def __init__(self, embedding_dim=512):
         super().__init__()
         
-        # Use ResNet34 as backbone but with fewer layers
+        # Use ResNet34 as backbone
         resnet = models.resnet34(weights=ResNet34_Weights.DEFAULT)
-        layers = list(resnet.children())[:-3]  # Remove last conv block
-        self.backbone = nn.Sequential(*layers)
+        modules = list(resnet.children())[:-2]  # Remove avgpool and fc
+        self.backbone = nn.Sequential(*modules)
         
-        # Simplified Feature Pyramid Network
-        self.fpn = FeaturePyramidNetwork(256)
-        
-        # Pooling and embedding
-        self.pool = nn.AdaptiveAvgPool2d(1)
-        
-        # Simpler embedding network
+        # Embedding network
         self.embedding = nn.Sequential(
-            nn.Flatten(),
-            nn.Linear(256, embedding_dim),
-            nn.BatchNorm1d(embedding_dim),
+            nn.Linear(512, 256),  # First layer reduces to 256
+            nn.Linear(256, 512),  # Second layer expands to 512
+            nn.BatchNorm1d(512),
             nn.ReLU(),
-            nn.Dropout(0.3),
-            nn.Linear(embedding_dim, embedding_dim),
-            nn.BatchNorm1d(embedding_dim)
+            nn.Linear(512, 512),  # Third layer maintains 512
+            nn.Linear(512, 512),  # Fourth layer maintains 512
+            nn.BatchNorm1d(512),
+            nn.ReLU()
         )
         
-        # Initialize weights
-        self._init_weights()
-    
-    def _init_weights(self):
-        for m in self.modules():
-            if isinstance(m, (nn.Conv2d, nn.Linear)):
-                nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
-                if m.bias is not None:
-                    nn.init.constant_(m.bias, 0)
-            elif isinstance(m, (nn.BatchNorm2d, nn.BatchNorm1d)):
-                nn.init.constant_(m.weight, 1)
-                nn.init.constant_(m.bias, 0)
-    
     def forward(self, x):
         # Extract features
         x = self.backbone(x)
         
-        # Apply FPN
-        x = self.fpn(x)
+        # Global average pooling
+        x = F.adaptive_avg_pool2d(x, 1)
+        x = x.view(x.size(0), -1)
         
-        # Global pooling
-        x = self.pool(x)
-        
-        # Embedding network
+        # Embedding
         x = self.embedding(x)
         
         return F.normalize(x, p=2, dim=1)
+
+class TripletLoss(nn.Module):
+    def __init__(self, margin=1.0):
+        super().__init__()
+        self.margin = margin
+        
+    def forward(self, anchor, positive, negative):
+        distance_positive = (anchor - positive).pow(2).sum(1)
+        distance_negative = (anchor - negative).pow(2).sum(1)
+        losses = F.relu(distance_positive - distance_negative + self.margin)
+        return losses.mean()
+
+class CombinedLoss(nn.Module):
+    def __init__(self, contrastive_margin=2.0, triplet_margin=1.0, alpha=0.5):
+        super().__init__()
+        self.contrastive = ContrastiveLoss(margin=contrastive_margin)
+        self.triplet = TripletLoss(margin=triplet_margin)
+        self.alpha = alpha
+    
+    def forward(self, output1, output2, label, negative=None):
+        contrastive_loss = self.contrastive(output1, output2, label)
+        if negative is not None:
+            triplet_loss = self.triplet(output1, output2, negative)
+            return self.alpha * contrastive_loss + (1 - self.alpha) * triplet_loss
+        return contrastive_loss
 
 class ContrastiveLoss(nn.Module):
     def __init__(self, margin=2.0, hard_mining=True):
@@ -107,31 +77,8 @@ class ContrastiveLoss(nn.Module):
     
     def forward(self, embeddings1, embeddings2, labels):
         distances = F.pairwise_distance(embeddings1, embeddings2)
-        
-        if self.hard_mining:
-            # Online hard negative mining
-            pos_mask = labels == 1
-            neg_mask = labels == 0
-            
-            if pos_mask.any():
-                pos_loss = (distances * pos_mask.float()).mean()
-            else:
-                pos_loss = 0
-                
-            if neg_mask.any():
-                neg_distances = distances * neg_mask.float()
-                k = max(1, int(0.3 * neg_mask.sum().item()))
-                hardest_negatives = torch.topk(neg_distances, k, largest=False)[0]
-                neg_loss = F.relu(self.margin - hardest_negatives).mean()
-            else:
-                neg_loss = 0
-            
-            loss = pos_loss + neg_loss
-        else:
-            loss = labels * distances.pow(2) + (1 - labels) * F.relu(self.margin - distances).pow(2)
-            loss = loss.mean()
-        
-        return loss
+        losses = labels.float() * distances.pow(2) + (1 - labels.float()) * F.relu(self.margin - distances).pow(2)
+        return losses.mean()
 
 class TokiPonaDataset(Dataset):
     def __init__(self, data_dir, transform=None):
