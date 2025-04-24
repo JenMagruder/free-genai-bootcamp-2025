@@ -1,309 +1,169 @@
-# Toki Pona Learning Platform: Interactive Language Education
+# Toki Pona Learning Platform
 
-## Business Value Proposition
+An interactive language learning platform for Toki Pona featuring OCR, text adventure, and sentence construction.
 
-### Market Opportunity
-- Growing interest in constructed languages and alternative writing systems
-- Educational technology market valued at $342.4B (2025)
-- Rising demand for interactive language learning tools
-- Unique positioning in the Toki Pona community (~30,000 speakers)
+## 📸 Demo Screenshots
 
-### Key Features
-1. **OCR Symbol Recognition**
-   - Real-time sitelen pona recognition
-   - High accuracy (85.27%) symbol detection
-   - User-friendly drawing interface
-   - Instant feedback system
+| Feature | Screenshot |
+|---------|------------|
+| OCR Practice | ![OCR Practice](tokiponasymbolike.PNG) |
+| Text Adventure | ![Text Adventure](tokiponatextadventure.PNG) |
+| Sentence Practice | ![Sentence Practice](tokiponasentencepractice.PNG) |
+| Example Sentence | ![Example](tokiponasentenceexample.PNG) |
 
-2. **Interactive Text Adventure**
-   - Gamified learning experience
-   - Contextual vocabulary practice
-   - Story-driven engagement
-   - Progressive difficulty levels
+## 🚀 Quick Start Guide
 
-3. **Sentence Constructor**
-   - Hands-on grammar practice
-   - Real-time syntax validation
-   - Vocabulary reinforcement
-   - Structured learning path
+### Prerequisites
+- Python 3.8 or higher
+- Git
+- CUDA-capable GPU (optional, for faster training)
 
-4. **Translation Services**
-   - Real-time symbol recognition
-   - Document digitization
-   - Cross-script communication tools
-   - Cultural exchange platforms
+### Installation Steps
 
-### Competitive Advantages
-- Complete Toki Pona learning ecosystem
-- Multiple learning modalities (visual, interactive, gamified)
-- High-accuracy OCR capabilities
-- Engaging text adventure system
-- Practical sentence construction tools
-- Real-time processing capability
-- User-friendly Streamlit interface
-
-### Growth Potential
-1. **Market Expansion**
-   - Integration with language learning apps
-   - API services for developers
-   - Custom enterprise solutions
-   - Mobile application development
-   - Expansion to other constructed languages
-
-2. **Technology Enhancement**
-   - Support for additional scripts
-   - Advanced game narratives
-   - Mobile-optimized interface
-   - Cloud deployment options
-   - Enhanced multiplayer features
-
-### Implementation Timeline
-- **Phase 1** Core OCR functionality
-- **Phase 2** Web interface development
-- **Phase 3** Performance optimization
-- **Phase 4** Mobile deployment
-- **Phase 5** Enterprise integration
-
-## Toki Pona OCR Model
-
-An Optical Character Recognition (OCR) model for Toki Pona sitelen pona script using Siamese Neural Networks and Streamlit.
-
-## Overview
-
-This project implements an OCR system that can recognize Toki Pona sitelen pona symbols. It uses a Siamese Neural Network architecture with ResNet34 backbone for feature extraction and similarity-based recognition.
-
-## Supported Symbols
-
-Currently, the model can recognize the following Toki Pona symbols:
-- `ike` (bad, negative)
-- `lili` (small, little)
-- `ma` (land, earth, territory)
-- `mi` (I, me, we)
-- `moku` (food, eat)
-- `ona` (he, she, it, they)
-- `pona` (good, positive)
-- `sina` (you)
-- `suli` (big, important)
-- `tawa` (to, for, moving)
-- `tomo` (house, building, structure)
-
-Each symbol has 100 augmented training images with various rotations, scales, and transformations.
-
-## Technical Details
-
-### Model Architecture
-- **Backbone Network**: 
-  - ResNet34 pretrained on ImageNet
-  - Removed final avgpool and fc layers
-  - Output channels: 512
-  - Input image size: 224x224x3
-
-- **Embedding Network**:
-  - Layer 1: Linear(512 → 256) - Dimensionality reduction
-  - Layer 2: Linear(256 → 512) - Feature expansion
-  - Layer 3: BatchNorm1d(512) + ReLU
-  - Layer 4: Linear(512 → 512) - Feature refinement
-  - Layer 5: Linear(512 → 512) - Final embedding
-  - Layer 6: BatchNorm1d(512) + ReLU
-  - Output: L2-normalized 512-dimensional embeddings
-
-### Architecture Diagrams
-
-#### Model Architecture Overview
-```
-Input Image
-    │
-    ▼
-┌─────────────┐
-│  ResNet34   │ 
-│  Backbone   │ ◄── Pretrained weights
-└─────────────┘
-    │ (512 channels)
-    ▼
-┌─────────────┐
-│  Embedding  │
-│  Network    │
-└─────────────┘
-    │ (512-dim)
-    ▼
-L2 Normalized
-Embedding
-```
-
-#### Embedding Network Detail
-```
-512 channels
-    │
-    ▼
-┌───────────┐
-│ Linear    │──► 256
-└───────────┘
-    │
-┌───────────┐
-│ Linear    │──► 512
-└───────────┘
-    │
-┌───────────┐
-│ BatchNorm │
-│ + ReLU    │──► 512
-└───────────┘
-    │
-┌───────────┐
-│ Linear    │──► 512
-└───────────┘
-    │
-┌───────────┐
-│ Linear    │──► 512
-└───────────┘
-    │
-┌───────────┐
-│ BatchNorm │
-│ + ReLU    │──► 512
-└───────────┘
-```
-
-#### Training Pipeline
-```
-Reference Symbol    Query Symbol
-       │                │
-       ▼                ▼
-   ResNet34         ResNet34
-       │                │
-       ▼                ▼
-   Embedding       Embedding
-       │                │
-       ▼                ▼
-    L2 Norm         L2 Norm
-       │                │
-       └────┐      ┌────┘
-            ▼      ▼
-        Contrastive Loss
-            │
-            ▼
-      Backpropagation
-```
-
-#### Inference Process
-```
-Database Symbols    Query Symbol
-      │                │
-      ▼                ▼
-  Embeddings        ResNet34
-  (Precomputed)         │
-      │                 ▼
-      │             Embedding
-      │                 │
-      │                 ▼
-      │              L2 Norm
-      │                 │
-      └──────┐   ┌─────┘
-             ▼   ▼
-      Cosine Similarity
-             │
-             ▼
-    Top-K Most Similar
-         Symbols
-```
-
-### Training Details
-- **Loss Function**: 
-  - Contrastive Loss with margin=2.0
-  - Pulls similar pairs closer, pushes dissimilar pairs apart
-  - Distance metric: Euclidean distance
-
-- **Optimizer**: 
-  - Adam optimizer
-  - Learning rate: 0.001
-  - Beta1: 0.9, Beta2: 0.999
-
-- **Training Process**:
-  - Batch size: 32 pairs (16 positive, 16 negative)
-  - Epochs: 100
-  - Early stopping patience: 10
-  - Validation split: 20%
-  - Best validation accuracy: 85.27%
-
-- **Data Augmentation Pipeline**:
-  - Random rotation: ±15 degrees
-  - Random scaling: 0.9 to 1.1
-  - Random translation: ±10% of image size
-  - Random brightness/contrast adjustment
-  - Gaussian noise: σ=0.01
-  - Normalization: mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
-
-### Inference
-- Input preprocessing matches training augmentation
-- Cosine similarity used for symbol matching
-- Confidence threshold: 0.75
-- Real-time inference (~100ms on CPU)
-
-### Performance Metrics
-- Training time on Colab GPU: ~2 hours
-- Model size: 21.3MB
-- Average inference time:
-  - CPU (Intel i5): 102ms
-  - Google Colab GPU: 23ms
-- Memory usage: ~200MB during inference
-
-## Development Challenges
-
-1. **CPU Performance Issues**
-   - Initial training on local CPU was very slow
-   - CPU overheating during extended training sessions
-   - Solved by moving training to Google Colab's free GPU
-
-2. **Model Architecture Evolution**
-   - Initially used Feature Pyramid Network (FPN)
-   - Removed FPN due to compatibility issues with state dictionary
-   - Simplified to direct ResNet34 features for better maintainability
-
-3. **Symbol Recognition Challenges**
-   - Some symbols (e.g., "ala") were misclassified
-   - Identified missing symbols in training data
-   - Need to expand dataset with more symbols
-
-## Setup and Usage
-
-1. **Install Dependencies**
+1. **Clone the repository**
 ```bash
+git clone https://github.com/JenMagruder/free-genai-bootcamp-2025.git
+cd free-genai-bootcamp-2025/toki-pona-ocr
+```
+
+2. **Set up Python environment**
+```bash
+# Create and activate virtual environment
+python -m venv venv
+# On Windows:
+venv\Scripts\activate
+# On Unix/MacOS:
+source venv/bin/activate
+
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-2. **Run the Streamlit App**
+3. **Run the application**
 ```bash
 streamlit run app/main.py
 ```
 
-3. **Using the OCR**
-- Launch the Streamlit app
-- Draw or upload a Toki Pona symbol
-- The model will predict the most similar symbol from its training set
+### Dependencies
+All required packages are listed in `requirements.txt`:
+- streamlit==1.32.0 - Web interface
+- torch==2.2.0 - Deep learning framework
+- torchvision==0.17.0 - Computer vision tools
+- numpy==1.24.3 - Numerical computations
+- Pillow==10.2.0 - Image processing
+- matplotlib==3.8.2 - Plotting and visualization
+- Additional utilities (see requirements.txt for full list)
 
-## Future Improvements
+### Troubleshooting Common Issues
+- If you see CUDA errors, the model will fall back to CPU
+- For "module not found" errors, ensure you've activated the virtual environment
+- For drawing issues, try clearing browser cache or using incognito mode
 
-1. **Dataset Expansion**
-   - Add missing symbols (e.g., `ala`, `jan`, `li`, `o`)
-   - Increase training examples per symbol
-   - Improve data augmentation techniques
+## 🎯 Features
 
-2. **Model Enhancements**
-   - Experiment with different backbones (e.g., EfficientNet)
-   - Implement attention mechanisms
-   - Try triplet loss instead of contrastive loss
+### 1. OCR Symbol Recognition (85.27% accuracy)
+- Draw Toki Pona symbols directly in browser
+- Get instant recognition results
+- View confidence scores for predictions
+- Currently supports 11 common symbols:
+  - ike (bad, negative)
+  - lili (small, little)
+  - ma (land, earth)
+  - mi (I, me, we)
+  - moku (food, eat)
+  - ona (he, she, it)
+  - pona (good, simple)
+  - sina (you)
+  - suli (big, important)
+  - tawa (to, for, moving)
+  - tomo (house, building)
 
-3. **Performance Optimization**
-   - Implement model quantization
-   - Cache intermediate features
-   - Add progressive resizing
+### 2. Text Adventure
+- Learn through interactive storytelling
+- Track vocabulary progress
+- Earn points for correct choices
+- Gradual difficulty progression
 
-## Contributing
+### 3. Sentence Constructor
+- Build valid Toki Pona sentences
+- Get immediate feedback
+- Practice with common patterns
+- View example translations
 
-Feel free to contribute by:
-1. Adding new symbols to the training data
-2. Improving model architecture
-3. Enhancing the Streamlit interface
-4. Fixing bugs and issues
+## 🔧 Technical Architecture
 
-## License
+### OCR Model
+- **Framework**: PyTorch 2.2.0
+- **Architecture**: Siamese Neural Network with ResNet34 backbone
+- **Input**: 224x224 RGB images
+- **Output**: 512-dimensional embeddings
+- **Training**: Google Colab GPU (due to local CPU limitations)
+- **Accuracy**: 85.27% on test set
 
-This project is open source and available under the MIT License.
+### Web Interface
+- **Framework**: Streamlit 1.32.0
+- **Drawing**: HTML5 Canvas
+- **State Management**: Streamlit Sessions
+- **Styling**: Custom CSS components
+
+## 📊 Performance Metrics
+
+| Metric | Value |
+|--------|--------|
+| OCR Accuracy | 85.27% |
+| Inference Time | ~200ms |
+| Memory Usage | ~500MB |
+| Supported Symbols | 11 |
+
+## 📁 Project Structure
+```
+toki-pona-ocr/
+├── app/
+│   ├── main.py           # Application entry point
+│   ├── ocr_model.py      # OCR model implementation
+│   ├── ocr_practice.py   # OCR interface
+│   ├── text_adventure.py # Interactive game
+│   └── sentence_practice.py # Sentence builder
+├── requirements.txt      # Python dependencies
+└── README.md            # Documentation
+```
+
+## 🛠️ Development
+
+### Running Tests
+```bash
+python -m pytest app/tests/
+```
+
+### Style Guide
+- Follow PEP 8
+- Use type hints
+- Document all functions
+- Keep line length ≤ 88 characters
+
+## 🔜 Future Improvements
+
+1. **LLM Integration**
+   - Add GPT-4 for dynamic text generation
+   - Implement intelligent feedback
+   - Create personalized learning paths
+
+2. **Technical Enhancements**
+   - Containerize application with Docker
+   - Add comprehensive test suite
+   - Implement CI/CD pipeline
+
+3. **Feature Additions**
+   - Speech recognition for pronunciation
+   - More Toki Pona symbols
+   - Advanced sentence patterns
+
+## 📝 License
+
+MIT License - See LICENSE file for details.
+
+## 🙏 Acknowledgments
+
+- Andrew Brown and ExamPro for the FREE GenAI Bootcamp
+- Toki Pona community for resources and feedback
+- All sponsors who made this possible

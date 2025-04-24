@@ -1,9 +1,0 @@
-torch>=2.0.0
-torchvision>=0.15.0
-pillow>=10.2.0
-requests>=2.31.0
-streamlit==1.32.0
-python-dotenv==1.0.0
-Wand>=0.6.13
-svglib>=1.5.1
-matplotlib>=3.8.0
