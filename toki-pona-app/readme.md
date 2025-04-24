@@ -2,111 +2,112 @@
 
 An interactive web application for learning Toki Pona, a minimalist constructed language designed to simplify thoughts and communication.
 
-## Overview
+## 🎯 Features
 
-Toki Pona is a philosophical constructed language known for its simplicity, with only 120-125 root words. This app helps users learn the language through interactive exercises and visual aids.
+- **Interactive Word Learning**
+  - English to Toki Pona translations
+  - Toki Pona to English translations
+  - Visual learning with Sitelen Pona script
+  - Progress tracking for vocabulary
 
-## Features
+- **Learning Tools**
+  - Example sentences for context
+  - Quiz functionality
+  - Instant feedback
+  - Visual aids and mnemonics
 
-- Interactive word learning with English translations
-- Sitelen Pona writing system visualization
-- Example sentences for context
-- Progress tracking for learned words
-- Quiz functionality to test knowledge
-
-## Getting Started
+## 🚀 Quick Start
 
 ### Prerequisites
 
 - Python 3.9 or higher
 - pip (Python package installer)
+- Git
 
-### Local Installation
+### Installation
 
-1. Clone the repository:
+1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/free-genai-bootcamp-2025.git
+git clone https://github.com/JenMagruder/free-genai-bootcamp-2025.git
 cd toki-pona-app
 ```
 
-2. Create and activate a virtual environment:
+2. **Set up Python environment**
 ```bash
+# Create virtual environment
 python -m venv venv
+
+# Activate virtual environment
 # On Windows:
-.\venv\Scripts\activate
-# On Unix or MacOS:
+venv\Scripts\activate
+# On Unix/MacOS:
 source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
 ```
 
-3. Install dependencies:
-```bash
-pip install streamlit pillow python-dotenv
-```
-
-4. Run the application:
+3. **Run the application**
 ```bash
 streamlit run app/000_learn_tokipana.py
 ```
 
-The app will open in your default web browser at `http://localhost:8501`.
+The app will open at `http://localhost:8501`
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 toki-pona-app/
 ├── app/
-│   ├── 000_learn_tokipana.py    # Main application file
-│   └── requirement.txt           # Python dependencies
+│   ├── 000_learn_tokipana.py    # Main application
+│   ├── 00_tokipona_eng          # Toki Pona to English data
+│   ├── 01_eng_tokipona          # English to Toki Pona data
+│   ├── config.py                # Configuration settings
+│   ├── inference.py             # Model inference
+│   ├── init_streamlit_app.py    # App initialization
+│   ├── ocr_model.py            # OCR model implementation
+│   ├── preload_model.py        # Model loading utilities
+│   └── train_ocr.py            # Model training script
+├── requirements.txt             # Project dependencies
 └── README.md                    # Documentation
 ```
 
-## Usage
+## 🛠️ Development
 
-1. **Word Learning**: Browse through Toki Pona words and their English translations
-2. **Writing System**: Explore the sitelen pona writing system
-3. **Practice**: Use example sentences and quizzes to test your knowledge
-4. **Track Progress**: Monitor your learning progress through the built-in tracking system
+### Running Tests
+```bash
+python -m pytest app/tests/
+```
 
-## Usage Guide
+### Adding New Features
+1. Create a new branch
+2. Implement your feature
+3. Add tests
+4. Submit a pull request
 
-### 1. Word Learning
-- Browse through the vocabulary list
-- Click on words to see detailed translations
-- Practice with example sentences
-- Take quizzes to test your knowledge
+## 🔧 Technical Details
 
-### 2. Writing System
-- Study the sitelen pona characters
-- Practice writing system recognition
-- Learn symbol combinations
-- View example usage
+### Application Stack
+- **Frontend**: Streamlit
+- **Backend**: Python
+- **ML Models**: PyTorch
+- **Data Storage**: Local files
 
-### 3. Progress Tracking
-- Monitor your learning progress
-- Review mastered words
-- Identify areas needing practice
-- Track quiz scores
+### Model Architecture
+- OCR model based on ResNet34
+- Siamese Neural Network for symbol recognition
+- Pre-trained on ImageNet
 
-## Troubleshooting
+## 🤝 Contributing
 
-### Common Issues
+Contributions are welcome! Please read our [Contributing Guidelines](../toki-pona-ocr/CONTRIBUTING.md) for details on how to submit pull requests.
 
-1. **Streamlit Port Already in Use**
-   - Kill the existing process
-   - Use a different port: `streamlit run app/000_learn_tokipana.py --server.port=8502`
+## 📝 License
 
-2. **Package Installation Issues**
-   - Ensure virtual environment is activated
-   - Update pip: `python -m pip install --upgrade pip`
-   - Install packages individually if needed
+MIT License - See LICENSE file for details.
 
-## Contributing
+## 🙏 Acknowledgments
 
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-
-## Acknowledgments
-
-- Toki Pona created by Sonja Lang
-- Built with Streamlit framework
-- Submitted for GenAI Bootcamp 2025 by ExamPro
+- Andrew Brown and ExamPro for the FREE GenAI Bootcamp
+- Toki Pona community for resources and feedback
+- All sponsors who made this possible
