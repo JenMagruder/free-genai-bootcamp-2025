@@ -1,10 +1,17 @@
-streamlit>=1.29.0
-gradio>=4.0.0
-openai>=1.0.0
-requests>=2.31.0
-python-dotenv
-PyYAML>=6.0.1
-manga-ocr>=0.1.8
+# UI Frameworks
+streamlit==1.32.0  # Match version with other projects
+gradio==4.12.0     # Latest stable version
+
+# AI/ML Dependencies
+openai==1.12.0     # GPT integration
+manga-ocr==0.1.8   # Japanese OCR
+
+# ML Framework (CPU version for wider compatibility)
 --extra-index-url https://download.pytorch.org/whl/cpu
 torch==2.6.0+cpu
 torchvision==0.21.0+cpu
+
+# Utilities
+requests==2.31.0   # API calls
+python-dotenv==1.0.1  # Environment management
+PyYAML==6.0.1     # Prompt configuration
