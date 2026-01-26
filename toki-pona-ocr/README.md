@@ -1,8 +1,8 @@
 # Toki Pona Learning Platform
 
-An interactive language learning platform for Toki Pona featuring OCR, text adventure, and sentence construction.
+Interactive language learning platform for Toki Pona featuring OCR symbol recognition, text adventure game, and sentence construction practice.
 
-## 📸 Demo Screenshots
+## Demo Screenshots
 
 | Feature | Screenshot |
 |---------|------------|
@@ -11,159 +11,88 @@ An interactive language learning platform for Toki Pona featuring OCR, text adve
 | Sentence Practice | ![Sentence Practice](tokiponasentencepractice.PNG) |
 | Example Sentence | ![Example](tokiponasentenceexample.PNG) |
 
-## 🚀 Quick Start Guide
+## Quick Start
 
-### Prerequisites
-- Python 3.8 or higher
-- Git
-- CUDA-capable GPU (optional, for faster training)
+**Prerequisites:** Python 3.8+, Git, CUDA-capable GPU (optional for faster training)
 
-### Installation Steps
+**Installation:**
 
-1. **Clone the repository**
 ```bash
+# Clone repository
 git clone https://github.com/JenMagruder/free-genai-bootcamp-2025.git
 cd free-genai-bootcamp-2025/toki-pona-ocr
-```
 
-2. **Set up Python environment**
-```bash
-# Create and activate virtual environment
+# Create virtual environment
 python -m venv venv
-# On Windows:
-venv\Scripts\activate
-# On Unix/MacOS:
-source venv/bin/activate
+source venv/bin/activate  # On Unix/MacOS
+# venv\Scripts\activate   # On Windows
 
 # Install dependencies
 pip install -r requirements.txt
-```
 
-3. **Run the application**
-```bash
+# Run application
 streamlit run app/main.py
 ```
 
-### Dependencies
-All required packages are listed in `requirements.txt`:
-- streamlit==1.32.0 - Web interface
-- torch==2.2.0 - Deep learning framework
-- torchvision==0.17.0 - Computer vision tools
-- numpy==1.24.3 - Numerical computations
-- Pillow==10.2.0 - Image processing
-- matplotlib==3.8.2 - Plotting and visualization
-- Additional utilities (see requirements.txt for full list)
+**Dependencies:** streamlit 1.32.0, torch 2.2.0, torchvision 0.17.0, numpy 1.24.3, Pillow 10.2.0, matplotlib 3.8.2 (see requirements.txt for full list)
 
-### Troubleshooting Common Issues
-- If you see CUDA errors, the model will fall back to CPU
-- For "module not found" errors, ensure you've activated the virtual environment
-- For drawing issues, try clearing browser cache or using incognito mode
+**Troubleshooting:** CUDA errors will fall back to CPU. For module not found errors, activate virtual environment. For drawing issues, clear browser cache or use incognito mode.
 
-## 🎯 Features
+## Features
 
-### 1. OCR Symbol Recognition (85.27% accuracy)
-- Draw Toki Pona symbols directly in browser
-- Get instant recognition results
-- View confidence scores for predictions
-- Currently supports 11 common symbols:
-  - ike (bad, negative)
-  - lili (small, little)
-  - ma (land, earth)
-  - mi (I, me, we)
-  - moku (food, eat)
-  - ona (he, she, it)
-  - pona (good, simple)
-  - sina (you)
-  - suli (big, important)
-  - tawa (to, for, moving)
-  - tomo (house, building)
+**OCR Symbol Recognition (85.27% accuracy):** Draw Toki Pona symbols in browser with instant recognition results and confidence scores. Currently supports 11 common symbols: ike (bad), lili (small), ma (land), mi (I/we), moku (food), ona (he/she/it), pona (good), sina (you), suli (big), tawa (moving), tomo (house).
 
-### 2. Text Adventure
-- Learn through interactive storytelling
-- Track vocabulary progress
-- Earn points for correct choices
-- Gradual difficulty progression
+**Text Adventure:** Learn through interactive storytelling with vocabulary tracking, points for correct choices, and gradual difficulty progression.
 
-### 3. Sentence Constructor
-- Build valid Toki Pona sentences
-- Get immediate feedback
-- Practice with common patterns
-- View example translations
+**Sentence Constructor:** Build valid Toki Pona sentences with immediate feedback, common pattern practice, and example translations.
 
-## 🔧 Technical Architecture
+## Technical Architecture
 
-### OCR Model
-- **Framework**: PyTorch 2.2.0
-- **Architecture**: Siamese Neural Network with ResNet34 backbone
-- **Input**: 224x224 RGB images
-- **Output**: 512-dimensional embeddings
-- **Training**: Google Colab GPU (due to local CPU limitations)
-- **Accuracy**: 85.27% on test set
+**OCR Model:** Siamese Neural Network with ResNet34 backbone using PyTorch 2.2.0. Input is 224x224 RGB images, output is 512-dimensional embeddings. Trained on Google Colab GPU achieving 85.27% accuracy on test set.
 
-### Web Interface
-- **Framework**: Streamlit 1.32.0
-- **Drawing**: HTML5 Canvas
-- **State Management**: Streamlit Sessions
-- **Styling**: Custom CSS components
+**Web Interface:** Streamlit 1.32.0 with HTML5 Canvas drawing, Streamlit Sessions state management, and custom CSS styling.
 
-## 📊 Performance Metrics
+## Performance
 
 | Metric | Value |
 |--------|--------|
 | OCR Accuracy | 85.27% |
-| Inference Time | ~200ms |
-| Memory Usage | ~500MB |
+| Inference Time | 200ms |
+| Memory Usage | 500MB |
 | Supported Symbols | 11 |
 
-## 📁 Project Structure
+## Project Structure
+
 ```
 toki-pona-ocr/
 ├── app/
-│   ├── main.py           # Application entry point
-│   ├── ocr_model.py      # OCR model implementation
-│   ├── ocr_practice.py   # OCR interface
-│   ├── text_adventure.py # Interactive game
-│   └── sentence_practice.py # Sentence builder
-├── requirements.txt      # Python dependencies
-└── README.md            # Documentation
+│   ├── main.py
+│   ├── ocr_model.py
+│   ├── ocr_practice.py
+│   ├── text_adventure.py
+│   └── sentence_practice.py
+├── requirements.txt
+└── README.md
 ```
 
-## 🛠️ Development
+## Development
 
-### Running Tests
-```bash
-python -m pytest app/tests/
-```
+**Tests:** `python -m pytest app/tests/`
 
-### Style Guide
-- Follow PEP 8
-- Use type hints
-- Document all functions
-- Keep line length ≤ 88 characters
+**Style:** Follow PEP 8, use type hints, document all functions, keep line length ≤ 88 characters.
 
-## 🔜 Future Improvements
+## Future Improvements
 
-1. **LLM Integration**
-   - Add GPT-4 for dynamic text generation
-   - Implement intelligent feedback
-   - Create personalized learning paths
+**LLM Integration:** Add GPT-4 for dynamic text generation, intelligent feedback, and personalized learning paths.
 
-2. **Technical Enhancements**
-   - Containerize application with Docker
-   - Add comprehensive test suite
-   - Implement CI/CD pipeline
+**Technical Enhancements:** Containerize with Docker, add comprehensive test suite, implement CI/CD pipeline.
 
-3. **Feature Additions**
-   - Speech recognition for pronunciation
-   - More Toki Pona symbols
-   - Advanced sentence patterns
+**Feature Additions:** Speech recognition for pronunciation, more Toki Pona symbols, advanced sentence patterns.
 
-## 📝 License
+## License
 
 MIT License - See LICENSE file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
-- Andrew Brown and ExamPro for the FREE GenAI Bootcamp
-- Toki Pona community for resources and feedback
-- All sponsors who made this possible
+Andrew Brown and ExamPro for the FREE GenAI Bootcamp, Toki Pona community for resources and feedback, all sponsors who made this possible.
