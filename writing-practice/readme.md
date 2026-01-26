@@ -1,154 +1,92 @@
 # Japanese Writing Practice App
 
-An AI-powered application for practicing Japanese writing through interactive exercises and automated grading.
+AI-powered application for practicing Japanese writing through interactive exercises and automated grading.
 
-## 🎯 Features
+## Features
 
-- **Sentence Generation**
-  - AI-generated practice sentences
-  - JLPT N5 grammar level
-  - Contextual vocabulary usage
-  - Progressive difficulty
+**Sentence Generation:** AI-generated practice sentences at JLPT N5 grammar level with contextual vocabulary usage and progressive difficulty.
 
-- **Writing Practice**
-  - Image upload for handwritten text
-  - Real-time OCR transcription
-  - Automated grading system
-  - Instant feedback
+**Writing Practice:** Image upload for handwritten text with real-time OCR transcription, automated grading system, and instant feedback.
 
-- **Learning Tools**
-  - Translation assistance
-  - Grammar explanations
-  - Vocabulary suggestions
-  - Progress tracking
+**Learning Tools:** Translation assistance, grammar explanations, vocabulary suggestions, and progress tracking.
 
-## 🚀 Quick Start
+## Quick Start
 
-### Prerequisites
+**Prerequisites:** Python 3.8+, pip, Git, Flask backend server (lang-portal-flask-react) running on port 5000
 
-- Python 3.8 or higher
-- pip (Python package installer)
-- Git
-- Flask backend server (`lang-portal-flask-react`) running on port 5000
+**Installation:**
 
-### Installation
-
-1. **Clone the repository**
 ```bash
+# Clone repository
 git clone https://github.com/JenMagruder/free-genai-bootcamp-2025.git
 cd writing-practice
-```
 
-2. **Set up Python environment**
-```bash
 # Create virtual environment
 python -m venv venv
-
-# Activate virtual environment
-# On Windows:
-venv\Scripts\activate
-# On Unix/MacOS:
-source venv/bin/activate
+source venv/bin/activate  # On Unix/MacOS
+# venv\Scripts\activate   # On Windows
 
 # Install dependencies
 pip install -r requirements.txt
 ```
 
-3. **Start the backend server**
+**Start backend server:**
 ```bash
-# In a separate terminal
+# In separate terminal
 cd ../lang-portal-flask-react
 # Follow backend setup instructions
 ```
 
-4. **Run the application**
+**Run application:**
 ```bash
-# Choose one:
-streamlit run app.py        # Streamlit interface
-python gradio_app.py       # Gradio interface
+streamlit run app.py      # Streamlit interface
+# or
+python gradio_app.py     # Gradio interface
 ```
 
-## 📱 Application Flow
+## Application Flow
 
-### 1. Setup State
-- Initial screen with "Generate Sentence" button
-- Click generates a practice sentence
-- Transitions to Practice State
+**Setup State:** Initial screen with "Generate Sentence" button. Click generates practice sentence and transitions to Practice State.
 
-### 2. Practice State
-- Displays English sentence for translation
-- Provides image upload field
-- Submit button for grading
-- Transitions to Review State on submission
+**Practice State:** Displays English sentence for translation, provides image upload field, submit button for grading. Transitions to Review State on submission.
 
-### 3. Review State
-- Shows original English sentence
-- Displays OCR transcription
-- Shows Japanese translation
-- Provides grading and feedback
-- "Next Question" button for new practice
+**Review State:** Shows original English sentence, OCR transcription, Japanese translation, grading and feedback. "Next Question" button for new practice.
 
-## 🔧 Technical Architecture
+## Technical Architecture
 
-### Components
-- **Frontend**: Streamlit/Gradio
-- **Backend**: Flask API
-- **OCR**: MangaOCR
-- **LLM**: GPT for sentence generation and grading
-- **Storage**: Local file system
+**Components:** Streamlit/Gradio frontend, Flask API backend, MangaOCR for handwriting recognition, GPT for sentence generation and grading, local file system storage.
 
-### API Integration
-- Fetches word groups from `/api/groups/:id/raw`
-- Stores vocabulary in memory
-- Communicates with Flask backend for processing
+**API Integration:** Fetches word groups from `/api/groups/:id/raw`, stores vocabulary in memory, communicates with Flask backend for processing.
 
-### AI Components
-1. **Sentence Generator**
-   - Uses LLM for contextual sentences
-   - JLPT N5 grammar scope
-   - Controlled vocabulary difficulty
+**AI Components:** Sentence Generator uses LLM for contextual sentences at JLPT N5 grammar scope with controlled vocabulary difficulty. Grading System performs OCR transcription, translation verification, accuracy scoring (S-Rank system), and feedback generation.
 
-2. **Grading System**
-   - OCR transcription
-   - Translation verification
-   - Accuracy scoring (S-Rank system)
-   - Feedback generation
+## Project Structure
 
-## 📁 Project Structure
 ```
 writing-practice/
-├── app.py              # Streamlit application
-├── gradio_app.py       # Gradio interface
-├── gradio_word.py      # Word processing
-├── print.py            # Print utilities
-├── prompts.yaml        # LLM prompts
-├── requirements.txt    # Dependencies
-└── README.md          # Documentation
+├── app.py
+├── gradio_app.py
+├── gradio_word.py
+├── print.py
+├── prompts.yaml
+├── requirements.txt
+└── README.md
 ```
 
-## 🛠️ Development
+## Development
 
-### Running Tests
-```bash
-python -m pytest tests/
-```
+**Tests:** `python -m pytest tests/`
 
-### Adding Features
-1. Create feature branch
-2. Implement changes
-3. Add tests
-4. Submit pull request
+**Adding Features:** Create feature branch, implement changes, add tests, submit pull request.
 
-## 🤝 Contributing
+## Contributing
 
-Contributions are welcome! Please read our [Contributing Guidelines](../toki-pona-ocr/CONTRIBUTING.md) for details.
+Contributions welcome. Read Contributing Guidelines for details.
 
-## 📝 License
+## License
 
 MIT License - See LICENSE file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
-- Andrew Brown and ExamPro for the FREE GenAI Bootcamp
-- Japanese language community for resources
-- All sponsors who made this possible
+Andrew Brown and ExamPro for the FREE GenAI Bootcamp, Japanese language community for resources, all sponsors who made this possible.
